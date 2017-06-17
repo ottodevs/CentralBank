@@ -1,6 +1,6 @@
 pragma solidity 0.4.8;
 
-
+import "TokenContract.sol";
 /// @title Multisignature wallet - Allows multiple parties to agree on transactions before execution.
 /// @author Stefan George - <stefan.george@consensys.net>
 contract MultiSigWallet {
@@ -21,6 +21,7 @@ contract MultiSigWallet {
     mapping (uint => mapping (address => bool)) public confirmations;
     mapping (address => bool) public isOwner;
     address[] public owners;
+    address public TokenContractAddress;
     uint public required;
     uint public transactionCount;
 
@@ -99,10 +100,22 @@ contract MultiSigWallet {
     /*
      * Public functions
      */
-    /// @dev Contract constructor sets initial owners and required number of confirmations.
-    /// @param _owners List of initial owners.
-    /// @param _required Number of required confirmations.
-    function MultiSigWallet(address[] _owners, uint _required)
+    /// @dev Contract constructor sets initial owners and required number of confirmations. Creates a token contract.
+    /// @param _owners List of initial multisig owners.
+    /// @param _required Number of required multisig confirmations.
+    /// @param _initialSupply Update total token supply.
+    /// @param _tokenName Set the name of the token for display purposes.
+    /// @param _tokenSymbol Set the token symbol for display purposes.
+    /// @param _decimalUnits Amount of decimals for display purposes.
+
+
+    function MultiSigWallet(address[] _owners,
+                            uint _required,
+                            uint256 _initialSupply,
+                            string _tokenName,
+                            uint8 _decimalUnits,
+                            string _tokenSymbol
+                            )
         public
         validRequirement(_owners.length, _required)
     {
@@ -113,6 +126,11 @@ contract MultiSigWallet {
         }
         owners = _owners;
         required = _required;
+        TokenContractAddress = new TokenContract(_initialSupply,
+                                          _tokenName,
+                                          _decimalUnits,
+                                          _tokenSymbol,
+                                          this);
     }
 
     /// @dev Allows to add a new owner. Transaction has to be sent by wallet.

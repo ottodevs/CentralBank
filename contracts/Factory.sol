@@ -1,3 +1,11 @@
+
+
+/*
+Decided not to use a factoy since the manual effort is a bit smaller for
+presentation purposes one looses a bit of modularity
+*/
+
+
 pragma solidity ^0.4.8;
 import MultisigWallet.sol;
 import Token.sol;
