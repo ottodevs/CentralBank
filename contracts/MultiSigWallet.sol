@@ -21,7 +21,7 @@ contract MultiSigWallet {
     mapping (uint => mapping (address => bool)) public confirmations;
     mapping (address => bool) public isOwner;
     address[] public owners;
-    address public TokenContractAddress;
+    address public tokenContractAddress;
     uint public required;
     uint public transactionCount;
 
@@ -114,8 +114,7 @@ contract MultiSigWallet {
                             uint256 _initialSupply,
                             string _tokenName,
                             uint8 _decimalUnits,
-                            string _tokenSymbol
-                            )
+                            string _tokenSymbol)
         public
         validRequirement(_owners.length, _required)
     {
@@ -126,7 +125,7 @@ contract MultiSigWallet {
         }
         owners = _owners;
         required = _required;
-        TokenContractAddress = new TokenContract(_initialSupply,
+        tokenContractAddress = new TokenContract(_initialSupply,
                                           _tokenName,
                                           _decimalUnits,
                                           _tokenSymbol,
@@ -202,6 +201,10 @@ contract MultiSigWallet {
     /// @param value Transaction ether value.
     /// @param data Transaction data payload.
     /// @return Returns transaction ID.
+
+    /*!!TH remove destination and data from input
+    change addTransaction accordingly
+    */
     function submitTransaction(address destination, uint value, bytes data)
         public
         returns (uint transactionId)
@@ -278,6 +281,11 @@ contract MultiSigWallet {
     /// @param value Transaction ether value.
     /// @param data Transaction data payload.
     /// @return Returns transaction ID.
+
+        /*!!TH remove destination and data from input
+        remove notNull ? entirely?
+        change transaction struct
+        */
     function addTransaction(address destination, uint value, bytes data)
         internal
         notNull(destination)
