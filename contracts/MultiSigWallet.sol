@@ -25,10 +25,13 @@ contract MultiSigWallet {
     uint public required;
     uint public transactionCount;
 
+    /*TH: go through the code and make the changes below consistent
+    change the function which sends so it calls the functions of TokenContract
+    addTransaction duplicate for each function one*/
     struct Transaction {
-        address destination;
-        uint value;
-        bytes data;
+        address destination;//delete and use tokenContractAddress
+        uint value; //unit256
+        bytes data; //string or enum for mint or burn,
         bool executed;
     }
 
@@ -107,8 +110,6 @@ contract MultiSigWallet {
     /// @param _tokenName Set the name of the token for display purposes.
     /// @param _tokenSymbol Set the token symbol for display purposes.
     /// @param _decimalUnits Amount of decimals for display purposes.
-
-
     function MultiSigWallet(address[] _owners,
                             uint _required,
                             uint256 _initialSupply,
@@ -247,6 +248,9 @@ contract MultiSigWallet {
         if (isConfirmed(transactionId)) {
             Transaction tx = transactions[transactionId];
             tx.executed = true;
+            /*TH something has to be changed below*/
+            /*it looks up the destionation and sends value and date there
+            we want it only to call a function, no value*/
             if (tx.destination.call.value(tx.value)(tx.data))
                 Execution(transactionId);
             else {
