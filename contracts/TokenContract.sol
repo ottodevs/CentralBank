@@ -99,7 +99,7 @@ contract TokenContract {
         return true;
     }
 
-    /*Allows to redeem from another address specified under allowances*/
+    /*Allows to redeem from another address specified under allowances
     function redeemFrom(address _from, uint256 _value) public returns (bool success) {
         if (balanceOf[_from] < _value) throw;                // Check if the sender has enough
         if (_value > allowance[_from][msg.sender]) throw;    // Check allowance
@@ -107,7 +107,7 @@ contract TokenContract {
         totalSupply -= _value;                               // Updates totalSupply
         Redeem(_from, _value);
         return true;
-    }
+    }*/
 
     /*Allows to mint tokens, only the owning multisig can do this*/
     function mint(uint256 _value) public onlyOwner returns (bool success) {

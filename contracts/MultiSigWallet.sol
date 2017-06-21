@@ -23,17 +23,16 @@ contract MultiSigWallet {
     mapping (uint => mapping (address => bool)) public confirmations;
     mapping (address => bool) public isOwner;
     address[] public owners;
-    address public tokenContractAddress;
+    TokenContract public tokenContract;
     uint public required;
     uint public transactionCount;
 
-    /*TH: go through the code and make the changes below consistent
-    change the function which sends so it calls the functions of TokenContract
-    addTransaction duplicate for each function one*/
+
     struct Transaction {
-        address destination;//delete and use tokenContractAddress
-        uint value; //unit256
-        bytes data; //string or enum for mint or burn,
+        //address destination;//delete and use tokenContractAddress
+        uint256 value; //unit256
+        bool mint; //mint = true; burn = false
+        //bytes data; //string or enum for mint or burn,
         bool executed;
     }
 
@@ -56,7 +55,8 @@ contract MultiSigWallet {
     }
 
     modifier transactionExists(uint transactionId) {
-        if (transactions[transactionId].destination == 0)
+        // if (transactions[transactionId].destination == 0) destination is gone
+        if (transactions[transactionId].value == 0)
             throw;
         _;
     }
@@ -79,7 +79,7 @@ contract MultiSigWallet {
         _;
     }
 
-    modifier notNull(address _address) {
+    modifier notNull(uint256 _address) {
         if (_address == 0)
             throw;
         _;
@@ -95,12 +95,14 @@ contract MultiSigWallet {
     }
 
     /// @dev Fallback function allows to deposit ether.
+    /* Disabled the fallback function
     function()
         payable
     {
         if (msg.value > 0)
             Deposit(msg.sender, msg.value);
     }
+    */
 
     /*
      * Public functions
@@ -128,7 +130,7 @@ contract MultiSigWallet {
         }
         owners = _owners;
         required = _required;
-        tokenContractAddress = new TokenContract(_initialSupply,
+        TokenContract tokenContract = new TokenContract(_initialSupply,
                                           _tokenName,
                                           _decimalUnits,
                                           _tokenSymbol,
@@ -208,11 +210,11 @@ contract MultiSigWallet {
     /*!!TH remove destination and data from input
     change addTransaction accordingly
     */
-    function submitTransaction(address destination, uint value, bytes data)
+    function submitTransaction(uint256 value, bool mint)
         public
         returns (uint transactionId)
     {
-        transactionId = addTransaction(destination, value, data);
+        transactionId = addTransaction(value, mint);
         confirmTransaction(transactionId);
     }
 
@@ -253,12 +255,25 @@ contract MultiSigWallet {
             /*TH something has to be changed below*/
             /*it looks up the destionation and sends value and date there
             we want it only to call a function, no value*/
-            if (tx.destination.call.value(tx.value)(tx.data))
+
+            if (tx.mint)
+            {if(tokenContract.mint(tx.value))
                 Execution(transactionId);
-            else {
-                ExecutionFailure(transactionId);
-                tx.executed = false;
+             else {
+                  ExecutionFailure(transactionId);
+                  tx.executed = false;
+                }
             }
+
+            else
+            {if(tokenContract.burn(tx.value))
+                Execution(transactionId);
+             else {
+                  ExecutionFailure(transactionId);
+                  tx.executed = false;
+                }
+            }
+
         }
     }
 
@@ -292,16 +307,15 @@ contract MultiSigWallet {
         remove notNull ? entirely?
         change transaction struct
         */
-    function addTransaction(address destination, uint value, bytes data)
+    function addTransaction(uint256 value, bool mint)
         internal
-        notNull(destination)
+        notNull(value)
         returns (uint transactionId)
     {
         transactionId = transactionCount;
         transactions[transactionId] = Transaction({
-            destination: destination,
             value: value,
-            data: data,
+            mint: mint,
             executed: false
         });
         transactionCount += 1;
