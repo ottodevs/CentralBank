@@ -1,5 +1,6 @@
 pragma solidity ^0.4.8;
-
+//this is based on the token contract provided on the ethereum foundation website
+//the amendments to the code can cause loss of funds, dont use this code
 contract tokenRecipient { function receiveApproval(address _from, uint256 _value, address _token, bytes _extraData); }
 
 contract TokenContract {
