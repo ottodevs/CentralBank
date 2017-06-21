@@ -1,6 +1,6 @@
-pragma solidity 0.4.8;
+pragma solidity 0.4.11;
 
-import "TokenContract.sol";
+import "./TokenContract.sol";
 /// @title Multisignature wallet - Allows multiple parties to agree on transactions before execution.
 /// based on the consensys multisi wallet created by Stefan George - <stefan.george[at]consensys.net>
 /// should not be used by anyone! the amendments to the original code can cause loss of funds
@@ -130,7 +130,7 @@ contract MultiSigWallet {
         }
         owners = _owners;
         required = _required;
-        TokenContract tokenContract = new TokenContract(_initialSupply,
+        tokenContract = new TokenContract(_initialSupply,
                                           _tokenName,
                                           _decimalUnits,
                                           _tokenSymbol,
