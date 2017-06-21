@@ -2,7 +2,7 @@ pragma solidity 0.4.8;
 
 import "TokenContract.sol";
 /// @title Multisignature wallet - Allows multiple parties to agree on transactions before execution.
-/// based on the consensys multisi wallet created by Stefan George - <stefan.george@consensys.net>
+/// based on the consensys multisi wallet created by Stefan George - <stefan.george[at]consensys.net>
 /// should not be used by anyone! the amendments to the original code can cause loss of funds
 ///aaa
 contract MultiSigWallet {
@@ -143,7 +143,7 @@ contract MultiSigWallet {
         public
         onlyWallet
         ownerDoesNotExist(owner)
-        notNull(owner)
+        //notNull(owner)
         validRequirement(owners.length + 1, required)
     {
         isOwner[owner] = true;
@@ -202,9 +202,9 @@ contract MultiSigWallet {
     }
 
     /// @dev Allows an owner to submit and confirm a transaction.
-    /// @param destination Transaction target address.
+    // @param destination Transaction target address.
     /// @param value Transaction ether value.
-    /// @param data Transaction data payload.
+    // @param data Transaction data payload.
     /// @return Returns transaction ID.
 
     /*!!TH remove destination and data from input
@@ -266,7 +266,7 @@ contract MultiSigWallet {
             }
 
             else
-            {if(tokenContract.burn(tx.value))
+            {if(tokenContract.redeem(tx.value))
                 Execution(transactionId);
              else {
                   ExecutionFailure(transactionId);
@@ -298,9 +298,9 @@ contract MultiSigWallet {
      * Internal functions
      */
     /// @dev Adds a new transaction to the transaction mapping, if transaction does not exist yet.
-    /// @param destination Transaction target address.
+    // @param destination Transaction target address.
     /// @param value Transaction ether value.
-    /// @param data Transaction data payload.
+    // @param data Transaction data payload.
     /// @return Returns transaction ID.
 
         /*!!TH remove destination and data from input
