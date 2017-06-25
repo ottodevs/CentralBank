@@ -1,9 +1,9 @@
-pragma solidity 0.4.8;
+pragma solidity 0.4.11;
 
-import "TokenContract.sol";
-/// @title Multisignature wallet - Allows multiple parties to agree on transactions before execution.
-/// based on the consensys multisi wallet created by Stefan George - <stefan.george@consensys.net>
-/// !should not be used by anyone! the amendments to the original code can cause loss of funds
+import "./TokenContract.sol";
+// @title Multisignature wallet - Allows multiple parties to agree on transactions before execution.
+// based on the consensys multisi wallet created by Stefan George - <stefan.george@consensys.net>
+// !should not be used by anyone! the amendments to the original code can cause loss of funds
 contract MultiSigWallet {
 
     uint constant public MAX_OWNER_COUNT = 50;
@@ -151,7 +151,7 @@ contract MultiSigWallet {
     function submitAddOwner(address owner)
         public
     {
-        submitTransaction(this, 0, bytes4(sha3("addOwner(address owner)")), owner);
+        submitTransaction(this, 0, (bytes4(sha3("addOwner(address owner)")), owner));
     }
 
 
