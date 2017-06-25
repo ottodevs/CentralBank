@@ -3,7 +3,7 @@ pragma solidity 0.4.8;
 import "TokenContract.sol";
 /// @title Multisignature wallet - Allows multiple parties to agree on transactions before execution.
 /// based on the consensys multisi wallet created by Stefan George - <stefan.george@consensys.net>
-/// should not be used by anyone! the amendments to the original code can cause loss of funds 
+/// !should not be used by anyone! the amendments to the original code can cause loss of funds
 contract MultiSigWallet {
 
     uint constant public MAX_OWNER_COUNT = 50;
@@ -148,6 +148,13 @@ contract MultiSigWallet {
         OwnerAddition(owner);
     }
 
+    function submitAddOwner(address owner)
+        public
+    {
+        submitTransaction(this, 0, bytes4(sha3("addOwner(address owner)")), owner);
+    }
+
+
     /// @dev Allows to remove an owner. Transaction has to be sent by wallet.
     /// @param owner Address of owner.
     function removeOwner(address owner)
@@ -214,6 +221,7 @@ contract MultiSigWallet {
         transactionId = addTransaction(destination, value, data);
         confirmTransaction(transactionId);
     }
+
 
     /// @dev Allows an owner to confirm a transaction.
     /// @param transactionId Transaction ID.
