@@ -139,7 +139,7 @@ contract MultiSigWallet {
 
     /// @dev Allows to add a new owner. Transaction has to be sent by wallet.
     /// @param owner Address of new owner.
-    function addOwner(address owner)
+/*    function addOwner(address owner)
         public
         onlyWallet
         ownerDoesNotExist(owner)
@@ -150,9 +150,10 @@ contract MultiSigWallet {
         owners.push(owner);
         OwnerAddition(owner);
     }
-
+*/
     /// @dev Allows to remove an owner. Transaction has to be sent by wallet.
     /// @param owner Address of owner.
+/*
     function removeOwner(address owner)
         public
         onlyWallet
@@ -169,11 +170,11 @@ contract MultiSigWallet {
             changeRequirement(owners.length);
         OwnerRemoval(owner);
     }
-
+*/
     /// @dev Allows to replace an owner with a new owner. Transaction has to be sent by wallet.
     /// @param owner Address of owner to be replaced.
     /// @param owner Address of new owner.
-    function replaceOwner(address owner, address newOwner)
+/*    function replaceOwner(address owner, address newOwner)
         public
         onlyWallet
         ownerExists(owner)
@@ -189,18 +190,18 @@ contract MultiSigWallet {
         OwnerRemoval(owner);
         OwnerAddition(newOwner);
     }
-
+*/
     /// @dev Allows to change the number of required confirmations. Transaction has to be sent by wallet.
     /// @param _required Number of required confirmations.
-    function changeRequirement(uint _required)
+/*    function changeRequirement(uint _required)
         public
         onlyWallet
         validRequirement(owners.length, _required)
     {
         required = _required;
         RequirementChange(_required);
-    }
 
+    }*/
     /// @dev Allows an owner to submit and confirm a transaction.
     // @param destination Transaction target address.
     /// @param value Transaction ether value.
